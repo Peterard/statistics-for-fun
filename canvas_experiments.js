@@ -2,15 +2,6 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 ctx.canvas.width  = 0.9*window.innerHeight;
 ctx.canvas.height = 0.9*window.innerHeight;
-//var grd = [];
-var populationGrowthData = getArrayFromData(populationGrowthDataJson, "Russia", 1950, 2014);
-var fruitConsumptionData = getArrayFromData(fruitConsumptionPerCapitaKgPerAnnumDataJson, "Russia", 1950, 2014);
-var popGrowthMin = Math.min.apply(null, populationGrowthData);
-var popGrowthMax = Math.max.apply(null, populationGrowthData);
-var fruitConsumptMin = Math.min.apply(null, fruitConsumptionData);
-var fruitConsumptMax = Math.max.apply(null, fruitConsumptionData);
-console.log(populationGrowthData);
-console.log(fruitConsumptionData);
 
 var heightOfCanvas = $("#myCanvas").height();
 var widthOfCanvas = $("#myCanvas").width();
@@ -25,31 +16,30 @@ function clear() {
     ctx.clearRect(0, 0, widthOfCanvas, heightOfCanvas);
 }
 
-
 function drawRectangle(i,j) {
 
-  var arrayIndexVertical = Math.round((i/numberOfRepetitionsVertical)*(populationGrowthData.length-1));
-  var arrayIndexHorizontal = Math.round((j/numberOfRepetitionsHorizontal)*(fruitConsumptionData.length-1));
+  var verticalDataValueRed =  valueNormalizer(dataField1, j, numberOfRepetitionsVertical, dataField1Max, dataField1Min);
+  var horizontalDataValueRed =  valueNormalizer(dataField2, i, numberOfRepetitionsHorizontal, dataField2Max, dataField2Min);
+  var verticalDataValueGreen =  valueNormalizer(dataField3, j, numberOfRepetitionsVertical, dataField3Max, dataField3Min);
+  var horizontalDataValueGreen =  valueNormalizer(dataField4, i, numberOfRepetitionsHorizontal, dataField4Max, dataField4Min);
+  var verticalDataValueBlue =  valueNormalizer(dataField5, j, numberOfRepetitionsVertical, dataField5Max, dataField5Min);
+  var horizontalDataValueBlue =  valueNormalizer(dataField6, i, numberOfRepetitionsHorizontal, dataField6Max, dataField6Min);
 
-  var populationGrowthDataValue = populationGrowthData[arrayIndexVertical]
-  populationGrowthDataValue = ((populationGrowthDataValue - popGrowthMin)/(popGrowthMax-popGrowthMin))
-  var fruitConsumptionDataValue = fruitConsumptionData[arrayIndexHorizontal]
-  fruitConsumptionDataValue = ((fruitConsumptionDataValue - fruitConsumptMin)/(fruitConsumptMax-fruitConsumptMin))
-console.log(populationGrowthDataValue)
-console.log(fruitConsumptionDataValue)
-	var a1 =  Math.floor(((populationGrowthDataValue*0.5)+(fruitConsumptionDataValue*0.5))*255);                //Math.round(254*Math.random());
-	var a2 =  Math.floor(fruitConsumptionDataValue*255);
-	var a3 =  Math.floor(33);
-	//document.write(Math.sin(Math.round(2500000*(1+Math.sin(i*2*Math.PI/70)))) + ", ");
+	var a1 =  Math.floor(((0.25*verticalDataValueRed)+(0.25*horizontalDataValueRed))*255 + ((0.25*verticalDataValueGreen)+(0.25*horizontalDataValueGreen))*255);
+	var a2 =  Math.floor(((0.25*verticalDataValueGreen)+(0.25*horizontalDataValueGreen))*255 + ((0.25*verticalDataValueBlue)+(0.25*horizontalDataValueBlue))*255);
+	var a3 =  Math.floor(((0.25*verticalDataValueBlue)+(0.25*horizontalDataValueBlue))*255 + ((0.25*verticalDataValueRed)+(0.25*horizontalDataValueRed))*255);
 	ctx.fillStyle = "rgb("+ a1 +","+a2 +","+a3+")";
 	ctx.fillRect( i*onePercentOfCanvasWidth , j*onePercentOfCanvasHeight , onePercentOfCanvasWidth , onePercentOfCanvasHeight);
-  // ctx.fillStyle = "rgba("+ 250 +","+250 +","+250+", 0.2)";
-	// ctx.fillRect( i*onePercentOfCanvasHeight , j*onePercentOfCanvasWidth , onePercentOfCanvasHeight , onePercentOfCanvasWidth);
+  ctx.fillStyle = "rgba("+ a3 +","+a1 +","+a2+", 0.2)";
+	ctx.fillRect( i*onePercentOfCanvasHeight + (onePercentOfCanvasHeight / 2) , j*onePercentOfCanvasWidth + (onePercentOfCanvasWidth / 2)  , onePercentOfCanvasHeight , onePercentOfCanvasWidth);
+  if(i == 50 && j == 50){
+    console.log("rgb("+ a1 +","+a2 +","+a3+")")
+  }
 }
 
 function renderScreen(){
 
-	//clear();
+	clear();
 	for (var j = 0; j < numberOfRepetitionsVertical; j++) {
   	for (var i = 0; i < numberOfRepetitionsHorizontal; i++) {
       drawRectangle(i,j)
@@ -57,5 +47,25 @@ function renderScreen(){
   }
 }
 
+var listOfCountries = getCountries(populationGrowthDataJson);
 
-renderScreen();
+for(var i = 0; i < listOfCountries.length; i++){
+  $("#countries").append('<option value="'+ listOfCountries[i] +'">'+ listOfCountries[i] +'</option>');
+}
+
+$('select').on('change', function (e) {
+    var optionSelected = $("option:selected", this);
+    var valueSelected = this.value;
+    var yearStart = 1917;
+    var yearEnd = 2017;
+    setDataField1(populationGrowthDataJson, valueSelected, yearStart, yearEnd);
+    setDataField2(energyConsumptionPerCapitaDataJson, valueSelected, yearStart, yearEnd);
+    setDataField3(humanRightsScoreDataJson, valueSelected, yearStart, yearEnd);
+    setDataField4(militaryExpenditureByGdpDataJson, valueSelected, yearStart, yearEnd);
+    setDataField5(fruitConsumptionPerCapitaKgPerAnnumDataJson, valueSelected, yearStart, yearEnd);
+    setDataField6(tradeByGdpDataJson, valueSelected, yearStart, yearEnd);
+    renderScreen();
+});
+
+
+//renderScreen();
