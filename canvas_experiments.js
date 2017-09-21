@@ -53,7 +53,20 @@ for(var i = 0; i < listOfCountries.length; i++){
   $("#countries").append('<option value="'+ listOfCountries[i] +'">'+ listOfCountries[i] +'</option>');
 }
 
-$('select').on('change', function (e) {
+for(var i = 1917; i < 2018; i++){
+  $("#startYear").append('<option value="'+ i +'">'+ i +'</option>');
+}
+
+$('#startYear').on('change', function (e) {
+  var optionSelected = $("option:selected", this);
+  var valueSelected = this.value;
+  for(var i = valueSelected; i < 2018; i++){
+    $("#endYear").append('<option value="'+ i +'">'+ i +'</option>');
+  }
+})
+
+
+$('#countries').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
     var yearStart = 1917;
