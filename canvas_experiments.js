@@ -30,11 +30,8 @@ function drawRectangle(i,j) {
 	var a3 =  Math.floor(((0.25*verticalDataValueBlue)+(0.25*horizontalDataValueBlue))*255 + ((0.25*verticalDataValueRed)+(0.25*horizontalDataValueRed))*255);
 	ctx.fillStyle = "rgb("+ a1 +","+a2 +","+a3+")";
 	ctx.fillRect( i*onePercentOfCanvasWidth , j*onePercentOfCanvasHeight , onePercentOfCanvasWidth , onePercentOfCanvasHeight);
-  ctx.fillStyle = "rgba("+ a3 +","+a1 +","+a2+", 0.2)";
-	ctx.fillRect( i*onePercentOfCanvasHeight + (onePercentOfCanvasHeight / 2) , j*onePercentOfCanvasWidth + (onePercentOfCanvasWidth / 2)  , onePercentOfCanvasHeight , onePercentOfCanvasWidth);
-  if(i == 50 && j == 50){
-    console.log("rgb("+ a1 +","+a2 +","+a3+")")
-  }
+  //ctx.fillStyle = "rgba("+ a3 +","+a1 +","+a2+", 0.2)";
+	//ctx.fillRect( (i*onePercentOfCanvasHeight) + (onePercentOfCanvasHeight / 2) , (j*onePercentOfCanvasWidth) + (onePercentOfCanvasWidth / 2)  , onePercentOfCanvasHeight , onePercentOfCanvasWidth);
 }
 
 function renderScreen(){
@@ -57,19 +54,19 @@ for(var i = 1917; i < 2018; i++){
   $("#startYear").append('<option value="'+ i +'">'+ i +'</option>');
 }
 
-$('#startYear').on('change', function (e) {
-  var optionSelected = $("option:selected", this);
-  var valueSelected = this.value;
-  for(var i = valueSelected; i < 2018; i++){
-    $("#endYear").append('<option value="'+ i +'">'+ i +'</option>');
-  }
-})
+// $('#startYear').on('change', function (e) {
+//   var optionSelected = $("option:selected", this);
+//   var valueSelected = this.value;
+//   for(var i = valueSelected; i < 2018; i++){
+//     $("#endYear").append('<option value="'+ i +'">'+ i +'</option>');
+//   }
+// })
 
 
 $('#countries').on('change', function (e) {
     var optionSelected = $("option:selected", this);
     var valueSelected = this.value;
-    var yearStart = 1917;
+    var yearStart = $("#startYear").val();
     var yearEnd = 2017;
     setDataField1(populationGrowthDataJson, valueSelected, yearStart, yearEnd);
     setDataField2(energyConsumptionPerCapitaDataJson, valueSelected, yearStart, yearEnd);
