@@ -1,0 +1,237 @@
+<!doctype html>
+<!-- I got this code originally from https://github.com/chartjs/Chart.js/tree/v2.0-alpha/samples -->
+<html>
+
+<head>
+    <title>Scatter Chart</title>
+    <script src="Chart.bundle.js"></script>
+    <script src="utils.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        background-image: url("http://4.bp.blogspot.com/-_U5bR0RPTTc/UY6ivORQSiI/AAAAAAAAWzo/c9O8v_MGXu0/s1600/Pitch.002b.png");
+        background-size: 98% 98%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    #centering{
+    }
+    </style>
+</head>
+
+<body>
+    <div id="centering">
+      <div id="background-div" style="width:80vw;height:53vw">
+          <canvas style="height:100%; width:100%;" id="canvas"></canvas>
+      </div>
+      <button id="randomizeData">Randomize Data</button>
+      <button id="home-team">Home Team</button>
+      <button id="away-team">Away Team</button>
+    </div>
+    <script>
+    var letterbox;
+        if(window.outerHeight >  window.outerWidth){
+          $("#background-div").css("width","80vw");
+          $("#background-div").css("height","53vw");
+          $("#centering").css("margin-left"," 8vw");
+          $("#centering").css("margin-right"," 8vw");
+          letterbox = false;
+        }else{
+          $("#background-div").css("width","121vh");
+          $("#background-div").css("height","80vh");
+          $("#centering").css("margin-left","calc((100% - 121vh)/2)");
+          $("#centering").css("margin-right","calc((100% - 121vh)/2)");
+          letterbox = true;
+        }
+
+        window.onresize = function(event) {
+          if(letterbox && window.outerHeight >  window.outerWidth){
+            $("#background-div").css("width","80vw");
+            $("#background-div").css("height","53vw");
+            $("#centering").css("margin-left"," 8vw");
+            $("#centering").css("margin-right"," 8vw");
+            letterbox = false;
+          }else if(!letterbox && window.outerHeight <=  window.outerWidth){
+            $("#background-div").css("width","121vh");
+            $("#background-div").css("height","80vh");
+            $("#centering").css("margin-left","calc((100% - 121vh)/2)");
+            $("#centering").css("margin-right","calc((100% - 121vh)/2)");
+            letterbox = true;
+          }
+        };
+
+        var playerArray = ["Douglas Vieira","Gakuji Ota","Carlos Martínez","Akira Ibayashi ","Alan Pinheiro","Koki Anzai","Henrik Larsson", "Shunsuke Nakamura", "Artur Boruc", "Bobo Balde", "Georgios Samaras"];
+        var oppositionArray = ["Ryoya Ogawa","Go Hatano","Takuo Okubo","Masato Morishige","Yohei Kajiyama","Peter Utaka","Sasa Papac", "Kirk Broadfoot", "Kenny Miller", "Lee McCulloch", "Kris Boyd"];
+
+        var color = Chart.helpers.color;
+        var scatterChartData = {
+            datasets: [{
+                label: "My First dataset",
+                borderColor: window.chartColors.red,
+                backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+                data: [{
+                    x: 200,
+                    y: 200,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: 0,
+                    y: 0,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: 200,
+                    y: 0,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: 0,
+                    y: 200,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:playerArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }]
+            }, {
+                label: "My Second dataset",
+                borderColor: window.chartColors.blue,
+                backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
+                hidden: true,
+                data: [{
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }, {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                }]
+            }]
+        };
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myScatter = Chart.Scatter(ctx, {
+                data: scatterChartData,
+                options: {
+                  legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                          display: false,
+                          ticks : {
+                                max : 204.5,
+                                min : -4.5
+                          }
+                        }],
+                        yAxes: [{
+                          display: false,
+                           ticks : {
+                                 max : 204.5,
+                                 min : -4.5
+                           }
+                        }],
+                      },
+                    title: {
+                        display: false,
+                        text: 'Test Football Chart'
+                    },
+                    tooltips: {
+                          callbacks: {
+                              label: function(tooltipItem, data) {
+                                console.log(tooltipItem);
+                                  console.log(data);
+                                  //data[tooltipItem.datasetIndex]
+                                  return "Player: "+data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].player +
+                                  "\n\r Min: " +data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].min;
+                                }
+                              }
+                            }
+                }
+            });
+        };
+        document.getElementById('randomizeData').addEventListener('click', function() {
+                scatterChartData.datasets[0].data = scatterChartData.datasets[0].data.map(function() {
+                    return {
+                        x: randomScalingFactor() + 100,
+                        y: randomScalingFactor() + 100,
+                        player:playerArray[Math.floor(11*Math.random())],
+                        min:Math.floor(90*Math.random()),
+                    };
+            });
+
+            scatterChartData.datasets[1].data = scatterChartData.datasets[1].data.map(function() {
+                return {
+                    x: randomScalingFactor() + 100,
+                    y: randomScalingFactor() + 100,
+                    player:oppositionArray[Math.floor(11*Math.random())],
+                    min:Math.floor(90*Math.random()),
+                };
+        });
+            window.myScatter.update();
+        });
+
+        $("#home-team").click(function(){
+          if(scatterChartData.datasets[0].hidden){
+            scatterChartData.datasets[0].hidden = false;
+          }else{
+              scatterChartData.datasets[0].hidden = true;
+          }
+          window.myScatter.update();
+        })
+        $("#away-team").click(function(){
+          if(scatterChartData.datasets[1].hidden){
+            scatterChartData.datasets[1].hidden = false;
+          }else{
+              scatterChartData.datasets[1].hidden = true;
+          }
+          window.myScatter.update();
+        })
+    </script>
+</body>
+
+</html>
